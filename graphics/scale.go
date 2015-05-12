@@ -6,9 +6,9 @@ package graphics
 
 import (
 	"errors"
+	"github.com/jmz331/gImageResize/graphics/interp"
 	"image"
 	"image/draw"
-	"jin/test/graphics/interp"
 )
 
 // Scale produces a scaled version of the image using bilinear interpolation.

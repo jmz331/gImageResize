@@ -5,7 +5,6 @@
 package graphics
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -31,13 +30,6 @@ func Thumbnail(dst draw.Image, src image.Image) error {
 	}
 	b = image.Rect(0, 0, bx, by)
 
-	// if rd > rs {
-	// 	b = image.Rect(0, 0, db.Dx(), int(float64(db.Dx())*rs))
-	// } else {
-	// 	b = image.Rect(0, 0, int(float64(db.Dy())/rs), db.Dy())
-	// 	// b = image.Rect(0, 0, db.Dy(), int(float64(db.Dy())/rs))
-	// }
-	fmt.Printf("%#v\n", b)
 	buf := image.NewRGBA(b)
 	if err := Scale(buf, src); err != nil {
 		return err
@@ -49,7 +41,6 @@ func Thumbnail(dst draw.Image, src image.Image) error {
 	} else {
 		pt.Y = (b.Dy() - db.Dy()) / 2
 	}
-	fmt.Printf("%#v\n", pt)
 	white := color.RGBA{255, 255, 255, 255}
 	draw.Draw(dst, db, &image.Uniform{white}, image.ZP, draw.Src)
 	draw.Draw(dst, db, buf, pt, draw.Src)

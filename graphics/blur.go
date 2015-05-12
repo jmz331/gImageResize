@@ -6,9 +6,9 @@ package graphics
 
 import (
 	"errors"
+	"github.com/jmz331/gImageResize/graphics/convolve"
 	"image"
 	"image/draw"
-	"jin/test/graphics/convolve"
 	"math"
 )
 
