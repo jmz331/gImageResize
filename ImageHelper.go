@@ -14,10 +14,9 @@ import (
 )
 
 func Thumbnails(src string, sizes ...[2]int) error {
-	dist := src
 	if len(sizes) > 0 {
 		for _, size := range sizes {
-			if err := Thumbnail(src, dist, size[0], size[1]); err != nil {
+			if _, err := ThumbnailFully(src, src, size[0], size[1]); err != nil {
 				return err
 			}
 		}
@@ -27,15 +26,19 @@ func Thumbnails(src string, sizes ...[2]int) error {
 	}
 }
 
-func Thumbnail(src, dist string, width, height int) error {
+func Thumbnail(src string, width, height int) (string, error) {
+	return ThumbnailFully(src, src, width, height)
+}
+
+func ThumbnailFully(src, dist string, width, height int) (string, error) {
 	if width <= 0 || height <= 0 {
-		return errors.New("缩略图尺寸不正确，应为大于0的正整数")
+		return "", errors.New("缩略图尺寸不正确，应为大于0的正整数")
 	}
 	img, _ := loadImage(src)
 	dst := image.NewRGBA(image.Rect(0, 0, width, height))
 
 	if err := graphics.Thumbnail(dst, img); err != nil {
-		return err
+		return "", err
 	}
 
 	ext := path.Ext(dist)
@@ -45,7 +48,7 @@ func Thumbnail(src, dist string, width, height int) error {
 	}
 	file, err := os.Create(dist)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer file.Close()
 	switch ext {
@@ -56,7 +59,7 @@ func Thumbnail(src, dist string, width, height int) error {
 	default:
 		err = png.Encode(file, dst)
 	}
-	return err
+	return dist, err
 }
 
 func loadImage(filename string) (image.Image, error) {

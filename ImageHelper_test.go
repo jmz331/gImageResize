@@ -1,6 +1,7 @@
 package gImageResize
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -9,5 +10,6 @@ func TestMultiSize(t *testing.T) {
 }
 
 func TestSingleSize(t *testing.T) {
-	Thumbnail("tmp/2.png", "tmp/2.png", 240, 240)
+	imgPath, _ := Thumbnail("tmp/2.png", 240, 240)
+	fmt.Println(imgPath)
 }
