@@ -2,6 +2,7 @@ package gImageResize
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jmz331/gImageResize/graphics"
 	"image"
 	"image/gif"
@@ -11,6 +12,20 @@ import (
 	"path"
 	"strings"
 )
+
+func Thumbnails(src string, sizes ...[2]int) error {
+	dist := src
+	if len(sizes) > 0 {
+		for _, size := range sizes {
+			if err := Thumbnail(src, dist, size[0], size[1]); err != nil {
+				return err
+			}
+		}
+		return nil
+	} else {
+		return errors.New("缩略图尺寸不正确")
+	}
+}
 
 func Thumbnail(src, dist string, width, height int) error {
 	if width <= 0 || height <= 0 {
@@ -23,12 +38,16 @@ func Thumbnail(src, dist string, width, height int) error {
 		return err
 	}
 
+	ext := path.Ext(dist)
+	if dist == src {
+		dist = fmt.Sprintf("%v_%v_%v%v", strings.TrimSuffix(dist, ext), width, height, ext)
+		ext = strings.ToLower(ext)
+	}
 	file, err := os.Create(dist)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	ext := strings.ToLower(path.Ext(dist))
 	switch ext {
 	case "jpg", "jpeg":
 		err = jpeg.Encode(file, dst, &jpeg.Options{Quality: 95})
